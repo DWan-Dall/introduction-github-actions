@@ -1,0 +1,40 @@
+name: Deploy Site para Teste e Produção
+
+on:
+  push:
+    branches:
+      - staging  # Quando o código for enviado para 'staging', o deploy vai para o servidor de teste
+      - main     # Quando o código for enviado para 'main', o deploy vai para o servidor de produção
+
+jobs:
+  deploy_to_test:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'  # Só roda se o push for na branch 'staging'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy para o Servidor de Teste
+        run: |
+          ssh -o StrictHostKeyChecking=no user@<IP_SERVER_TESTE> 'cd /path/to/test/server && git pull origin staging && docker-compose up --build'
+
+  deploy_to_production:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Só roda se o push for na branch 'main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy para o Servidor de Produção
+        run: |
+          ssh -o StrictHostKeyChecking=no user@<IP_SERVER_PRODUCAO> 'cd /path/to/production/server && git pull origin main && docker-compose up --build'
