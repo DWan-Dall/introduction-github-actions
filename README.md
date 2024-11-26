@@ -56,7 +56,7 @@ Você precisa gerar um par de chaves SSH para permitir o acesso remoto aos servi
 
     - No GitHub, abra o repositório onde o código do site está hospedado.
 
-    - Vá até Settings > Secrets > New repository secret.
+    - Vá até Settings > Secrets and variables > Actions > New repository secret.
 
     - Crie um secret chamado SSH_PRIVATE_KEY e cole o conteúdo da chave privada (id_rsa).
 
